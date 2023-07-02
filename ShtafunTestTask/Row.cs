@@ -1,56 +1,46 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 
 
 namespace ShtafunTestTask
 {
-    internal class Row
+    internal class Row : BaseElement
     {
-        public List<Bitmap> Images { get; private set; } 
-        public Row()
+        public List<Column> Columns { get; private set; }
+        public Row() : base()
         {
-            Images = new List<Bitmap>();
+            Columns = new List<Column>();
         }
-        public void ImageAdd(string filename)
+        public void ColumnAdd(Column column)
         {
-            Bitmap image = (Bitmap)Bitmap.FromFile(filename);
-            Images.Add(image);
+            Columns.Add(column);
+            var stbImg = column.GetStoryboardImage();
+            Images.Add(stbImg);
         }
-
-        public Bitmap GetStoryboardImage(int widthImage)
-        {
-            //Переменная для поиска минимума
-            int heightImage = Images[0].Height; 
-            //Переменная сумматор
+        public override Bitmap GetStoryboardImage()
+        { 
+            int newHeight = Images.Min(x => x.Height);
             int sumWidth = 0;
-            //Нахождение суммы ширин и поиск минимальной высоты изображений
-            //Высота результирующего изображения будет равна минимальной высоте 
-            foreach (var i in Images)
+            foreach(var i in Images)
             {
-                sumWidth += i.Width;
-                if (i.Height < heightImage)
-                    heightImage = i.Height;
+                float propCoef = Tools.GetPropCoef(i.Height, i.Width);
+                int newWidth = Tools.GetPropWidth(newHeight, propCoef);
+                sumWidth += newWidth;
             }
-            //Коэффициент увеличения(уменьшения) длин с учетом введенной результирующей ширины
-            float delta = widthImage / (float)sumWidth;
-            heightImage = (int)Math.Ceiling(heightImage * delta);
-            //Результирующее изображение
-            Bitmap bitmap = new Bitmap(widthImage, heightImage);
+            Bitmap bitmap = new Bitmap(sumWidth, newHeight);
             Graphics graphics = Graphics.FromImage(bitmap);
             int localWidth = 0;
-            //Перебор всех изображений
+
             foreach (var i in Images)
             {
-                //Коэффициент пропорциональности изображения
-                float propCoef = (float)i.Height / i.Width;
-                //Новая ширина
-                int newWidth = (int)Math.Ceiling(heightImage / propCoef);
-                //Размещения измененного изображения в результирующем
-                graphics.DrawImage(i, localWidth, 0, newWidth, heightImage);
+                float propCoef = Tools.GetPropCoef(i.Height, i.Width);
+                int newWidth = Tools.GetPropWidth(newHeight, propCoef);
+                graphics.DrawImage(i, localWidth, 0, newWidth, newHeight);
                 localWidth += newWidth;
             }
+            StoryborardedImg = bitmap;
             return bitmap;
         }
-
     }
 }
