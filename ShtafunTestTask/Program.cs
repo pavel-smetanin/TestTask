@@ -22,18 +22,33 @@
                 Column col2 = new Column();
                 Column col3 = new Column();
                 Row row1 = new Row();
+                
+                //Параметры
+                ImgParam param = new ImgParam()
+                {
+                    Right = 5,
+                    Left = 6,
+                    Top = 7,
+                    Bottom = 8,
+                };
+                root.ImageAdd(img1, param);
+                param.IncrementParams();
+                root.ImageAdd(img2, param);
 
-                root.ImageAdd(img1);
-                root.ImageAdd(img2);
+                param.IncrementParams();
+                col1.ImageAdd(img5, param);
+                param.IncrementParams();
+                col1.ImageAdd(img6, param);
 
-                col1.ImageAdd(img5);
-                col1.ImageAdd(img6);
+                param.IncrementParams();
+                col2.ImageAdd(img3, param);
+                param.IncrementParams();
+                row1.ImageAdd(img4, param);
 
-                col2.ImageAdd(img3);
-                row1.ImageAdd(img4);
-
-                col3.ImageAdd(img7);
-                col3.ImageAdd(img8);
+                param.RandomParams();
+                col3.ImageAdd(img7, param);
+                param.RandomParams();
+                col3.ImageAdd(img8, param);
 
                 row1.ColumnAdd(col3);
                 col2.RowAdd(row1);

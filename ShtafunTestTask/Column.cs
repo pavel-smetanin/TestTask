@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace ShtafunTestTask
 {
@@ -36,7 +35,6 @@ namespace ShtafunTestTask
                 graphics.DrawImage(i, 0, localHeight, newWidth, newHeight);
                 localHeight += newHeight;
             }
-            StoryborardedImg = bitmap;
             return bitmap;
         }
     }
